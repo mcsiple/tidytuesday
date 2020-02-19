@@ -8,7 +8,6 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(stringr)
 
-
 food_consumption <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-18/food_consumption.csv')
 str(food_consumption)
 unique(food_consumption$country)
@@ -42,3 +41,13 @@ dairy <- ggplot(data = worldp) +
 png('Dairy.png',width=6,height=4,units = 'in',res=150)
 dairy 
 dev.off()
+
+
+# Fancy dark background version -------------------------------------------
+# To make the fancy dark ones that everyone makes on twitter
+library(extrafont) #not sure which of these is required
+library(extrafontdb)
+library(hrbrthemes)
+
+dairy2 <- dairy + theme_ft_rc()
+dairy2
