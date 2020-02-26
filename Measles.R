@@ -1,4 +1,5 @@
-#Measles vaccines
+# Measles vaccines
+# Moody bc I listened to the awful Feb 25th democratic debate while coding.
 library(tidyverse)
 library(stringr)
 library(sf)
@@ -26,8 +27,8 @@ test <- measles.summ %>% # normally I would do something with date but I don't w
 mdf <- as.data.frame(measles) %>% 
   mutate(lat = as.numeric(lat),
          lng = as.numeric(lng)) %>%
-  filter(lng<(-70) & !is.na(lng) & !is.na(lat)) %>%
-  filter(!is.na(xper) & xper>25)
+  filter(lng<(-70) & !is.na(lng) & !is.na(lat)) %>% #filter out a few funky points
+  filter(!is.na(xper) & xper>25) #forget why I filtered for xper>25
 
 mapplot <- test %>%
             ggplot(aes(long,lat)) +
@@ -42,6 +43,7 @@ mapplot <- test %>%
             ggtitle("Mean statewide MMR vaccination rate")
 mapplot
 
+# Map with white points
 personalvax <- mapplot + 
   geom_point(data=mdf,aes(x=lng,y=lat,size=xper),
              colour='white', alpha=0.5) +
@@ -68,7 +70,7 @@ scatter <- measles %>%
   ylab("Exempted \nfor personal reasons (%)") +
   hrbrthemes::theme_ft_rc()
 
-tiff("TidyFeb25.tiff",width = 10,height=4,units = 'in',res = 150)
+png("TidyFeb25.png",width = 10,height=4,units = 'in',res = 150)
 p2 <- gridExtra::grid.arrange(bars,scatter,ncol=1)
 cowplot::plot_grid(mapplot,p2,rel_widths = c(2,1))
 dev.off()
