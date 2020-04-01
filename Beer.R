@@ -5,16 +5,14 @@ library(patchwork)
 
 brewing_materials <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-31/brewing_materials.csv')
 
+dg = "#222222"
+pal <- calecopal::cal_palette(name = "chaparral2", n = 6)[c(5,6)]
 
 # Density plot ------------------------------------------------------------
 
 s2 <- brewing_materials %>% 
   group_by(year, type) %>%
   filter(material_type %in% c('Grain Products',"Non-Grain Products"))
-
-N <- length(unique(s2$material_type))
-pal <- calecopal::cal_palette(name = "chaparral2", n = 6)[c(5,6)]
-#pal <- calecopal::cal_palette(name = "sierra1", n = 6)[c(2,5)]
 
 densplot <- s2 %>%
   rename("Material type"=material_type) %>%
