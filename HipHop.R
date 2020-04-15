@@ -37,7 +37,8 @@ hg <- femfreq %>%
   geom_col(colour='white') +
   hrbrthemes::theme_ft_rc() +
   xlab('Year') +
-  ylab("Number of female hip-hop\n  artists on critics' lists")
+  ylab("Number of female hip-hop\n  artists on critics' lists") +
+  labs(subtitle = "Were female artists recognized during the 'golden years'?")
 
 criticsummary <- polls %>% 
   group_by(critic_rols,gender) %>%
