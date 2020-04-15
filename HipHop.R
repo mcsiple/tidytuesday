@@ -1,9 +1,17 @@
-#Rap!
+#BBC hip-hop poll of critics
 polls <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-14/polls.csv')
 rankings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-14/rankings.csv')
 
 library(tidyverse)
 library(patchwork)
+
+# Five tracks I rocked out to while writing some of this code (after getting off Zoom, lol)
+# Bahamadia - Uknowhowwedu
+# Da Brat & Notorious B.I.G. - Da B Side
+# Remy Ma - Conceited
+# MC LYTE - Cold Rock a Party
+# and a new one... my life...
+# Megan Thee Stallion - Savage
 
 # Heat map showing 'golden years'
 rankheat <- polls %>%
@@ -60,6 +68,7 @@ whichcritics +
       plot_layout(heights = c(1,6)) ) +
   plot_layout(widths = c(2,1))
 dev.off()  
+
 
 
 # Extras ------------------------------------------------------------------
