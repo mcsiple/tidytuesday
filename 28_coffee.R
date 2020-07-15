@@ -42,7 +42,7 @@ p1 <- dat1 %>%
   coffeetheme +
   xlab('Acidity grade') +
   ylab('Country of origin') +
-  labs(title = "Which country of origin has the most acidic beans?",
+  labs(title = "Which country of origin has the least acidic beans?",
        subtitle = "Solving a mystery that Megsie and her dad have been pondering for years!",
        caption = "Data: James LeDoux @ Buzzfeed")
 
