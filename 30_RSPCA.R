@@ -2,15 +2,17 @@ library(magrittr)
 library(hrbrthemes)
 library(tidyverse)
 library(waffle)
-library(patchwork) # for inset - maybe?
 library(ghibli)
+library(cowplot) #for insets
 
 # Get the data ------------------------------------------------------------
+
 animal_outcomes <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/animal_outcomes.csv')
 animal_complaints <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/animal_complaints.csv')
 
 tuesdata <- tidytuesdayR::tt_load(2020, week = 30)
 brisbane_complaints <- tuesdata$brisbane_complaints
+
 # Set up themes -----------------------------------------------------------
 
 waffletheme <- theme_ft_rc() +
@@ -40,7 +42,6 @@ wafdat <- animal_outcomes %>%
   filter(outcome %in% c("Rehomed","Reclaimed") & year == 2018) %>%
   select(-year,-outcome, - Total) %>%
   pivot_longer(-animal_type,names_to = "region")
-
 
 wd <- wafdat %>% group_by(region)
 region_list <- group_split(wd)
@@ -127,6 +128,8 @@ ggdraw() +
 dev.off()
 
 
+# Basic time series plot --------------------------------------------------
+
 regionsummary <- animal_outcomes %>% 
   pivot_longer(cols = ACT:WA,names_to = "region") %>%
   group_by(year,animal_type,region,outcome) %>%
@@ -145,18 +148,18 @@ p2 <- regionsummary %>%
   facet_wrap(~region,ncol = 4) +
   scale_colour_manual("Animal type",values = petcols) +
   theme_ft_rc() +
-    theme(axis.title.x = element_text(size = rel(1.2),colour='white'),
-          axis.title.y = element_text(size = rel(1.2),colour='white'),
-          axis.text.x = element_text(colour = 'white'),
-          axis.text.y = element_text(colour = 'white'),
-          legend.text = element_text(colour = 'white'),
-          legend.title = element_text(colour = 'white'),
-          strip.text = element_text(colour = 'white')
-         ) +
+  theme(axis.title.x = element_text(size = rel(1.2),colour='white'),
+        axis.title.y = element_text(size = rel(1.2),colour='white'),
+        axis.text.x = element_text(colour = 'white'),
+        axis.text.y = element_text(colour = 'white'),
+        legend.text = element_text(colour = 'white'),
+        legend.title = element_text(colour = 'white'),
+        strip.text = element_text(colour = 'white')
+  ) +
   ylab("Proportion reclaimed or rehomed") +
   xlab("Year") +
   labs(caption = "Data: Australia RSPCA")
-  
+
 p2
 
 png("RSPCA2.png",width = 12,height = 7,units = 'in',res=200)
