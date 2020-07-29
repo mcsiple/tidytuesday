@@ -17,10 +17,11 @@ packages <- c("cowplot", "readr", "ggplot2" ,
 
 # Palettes and theme ------------------------------------------------------
 penpal <- ghibli_palette("SpiritedMedium",direction = -1)
-pentheme <-  theme(axis.title.x = element_text(size = rel(1.5)),
+pentheme <-  hrbrthemes::theme_ipsum_rc() +
+  theme(axis.title.x = element_text(size = rel(1.5)),
                    axis.title.y = element_text(size = rel(1.5)),
-                   panel.grid.major = element_blank(),
-                   panel.grid.minor = element_blank())
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
 
 
 # Plot stuff --------------------------------------------------------------
@@ -36,15 +37,10 @@ p1 <- ggplot(penguins, aes(x = sex, y = body_mass_g, fill = species)) +
   scale_fill_manual("Species",values = penpal) +
   xlab("Sex") +
   ylab("Body mass (g)") +
-  #scale_y_discrete(breaks = NULL) + # remove x grid lines
   coord_flip() +
   facet_wrap(~island,scale = "free_x",ncol = 1) +
-  hrbrthemes::theme_ipsum_rc() +
-    theme(axis.title.x = element_text(size = rel(1.5)),
-          axis.title.y = element_text(size = rel(1.5)),
-          legend.position = 'none',
-          panel.grid.major.x = element_blank(),
-          panel.grid.minor.x = element_blank())
+  pentheme +
+    theme(legend.position = 'none')
   
 p1
 
@@ -55,10 +51,8 @@ p2 <- penguins %>%
   facet_grid(island~sex) +
   xlab("Bill length (mm)") +
   ylab("Bill depth (mm)") +
-  hrbrthemes::theme_ipsum_rc() +
-  theme(axis.title.x = element_text(size = rel(1.5)),
-        axis.title.y = element_text(size = rel(1.5)),
-        panel.grid.major = element_blank(),
+  pentheme +
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = 'none')
 
@@ -69,10 +63,8 @@ p3 <- penguins %>%
   facet_grid(island~sex) +
   xlab("Body mass (g)") +
   ylab("Flipper length (mm)") +
-  hrbrthemes::theme_ipsum_rc() +
-  theme(axis.title.x = element_text(size = rel(1.5)),
-        axis.title.y = element_text(size = rel(1.5)),
-        panel.grid.major = element_blank(),
+  pentheme +
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = 'bottom')
 
