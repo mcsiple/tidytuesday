@@ -81,7 +81,8 @@ p1 <- d1 %>%
   ylab("Overall Bing sentiment score") +
   theme_avatar +
   labs(title = "Avatar: The Last Airbender",
-       subtitle = "Are sentiments better when Appa is present?")
+       subtitle = "Are sentiments better when Appa is present?",
+       caption = "Data: {appa} package")
 
 png('NewAvatar.png',width = 7,height = 10,units = 'in',res=200)
 p1
