@@ -4,7 +4,7 @@ library(tidyverse)
 library(tidytext)
 library(beyonce)
 library(patchwork)
-library(emoGG)
+library(ggpomological)
 
 # Get the data ------------------------------------------------------------
 tuesdata <- tidytuesdayR::tt_load('2020-08-11')
@@ -14,9 +14,16 @@ scenes <- tuesdata$scene_description
 
 # Palettes ----------------------------------------------------------------
 pn_pal <- c('#FFFFFF','#0096FF')
+pn_pal2 <- c('darkgrey','lightblue')
 char_pal <- beyonce_palette(90,n = 11)[c(1,4,10,11)]
 
-
+theme_avatar <- theme_pomological_plain() +
+  theme(text = element_text(family = "Herculanum", size = 12),
+        legend.position = 'bottom',
+        legend.box="vertical", legend.margin=margin(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank()) 
 # Plot 1: sentiments in episodes ------------------------------------------
 xx <- avatar %>%
   mutate(clean_char = str_replace_all(character_words, "[^a-zA-Z\\s]", " ")) %>%
@@ -39,34 +46,46 @@ d1$book <- factor(d1$book,levels = c('Water','Earth','Fire'))
 
 # Does Appa's presence mean more positive words?
 appafreq <- avatar %>%
-  mutate(n_appa = str_count(full_text,"appa")) %>%
+  mutate(n_appa = str_count(full_text,"Appa")) %>%
   group_by(book, chapter_num) %>%
   summarize(n_appa = sum(n_appa,na.rm=T))
+
+# Appa appearances
 d1a <- d1 %>%
   left_join(appafreq,by=c('book','chapter_num')) %>%
-  mutate(placement = 30) %>%
-  filter(n_appa.x>0) %>%
-  add_column(aplab = factor('Appa appearance'))
+  mutate(fake_y = -50, fake_size = 160)
 d1a$book <- factor(d1a$book,levels = c('Water','Earth','Fire'))
+
+d1a %>% 
+  ggplot(aes(x=chapter_num,y=fake_y,size=n_appa)) + 
+  geom_point(colour = 'white') +
+  geom_point(data = d1a,
+             aes(x=chapter_num,y=fake_y,size = fake_size),
+             shape =1,colour = 'white')
 
 p1 <- d1 %>%
   ggplot(aes(x=chapter_num,y=overall)) +
   geom_hline(yintercept = 0, colour = 'darkgrey') +
-  geom_segment(aes(x = chapter_num, xend=chapter_num, y=0, yend=overall,color = pn),lwd=1.1) +
-  scale_colour_manual('',values = pn_pal) +
-  geom_line(colour = 'lightgrey') +
+  geom_segment(aes(x = chapter_num, xend=chapter_num, y=0, yend=overall,color = pn),lwd=4) +
+  scale_colour_manual('',values = pn_pal2) +
+  geom_point(data = d1a,
+             aes(x=chapter_num,y=fake_y),
+             shape = 1,size = 5, colour = 'darkgrey') +
+  geom_point(data = d1a,
+             aes(x = chapter_num,y = fake_y,size = n_appa),
+             colour = 'darkgrey') +
+  scale_size(name = "Number of Appa mentions") +
+  guides(size = "legend") +
   facet_wrap(~book,ncol = 1) +
-  geom_point(data = d1a,aes(x=chapter_num,y=placement,shape = aplab),size=2) +
-  scale_shape_manual('',values = c(19),guide = 'legend') +
-  xlab("Chapter") +
+    xlab("Chapter") +
   ylab("Overall Bing sentiment score") +
-  hrbrthemes::theme_ft_rc() +
-  theme(legend.position = 'bottom',
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) +
+  theme_avatar +
   labs(title = "Avatar: The Last Airbender",
-       subtitle = "What is the mood, who speaks, \n and the most important question: When does Appa show up?")
+       subtitle = "Are sentiments better when Appa is present?")
+
+png('NewAvatar.png',width = 7,height = 10,units = 'in',res=200)
 p1
+dev.off()
 
 
 # Plot 2: ggstream plot of character lines over time ----------------------
