@@ -17,7 +17,7 @@ pn_pal <- c('#FFFFFF','#0096FF')
 pn_pal2 <- c('darkgrey','lightblue')
 char_pal <- beyonce_palette(90,n = 11)[c(1,4,10,11)]
 
-theme_avatar <- theme_pomological_plain() +
+theme_avatar <- theme_pomological_fancy() +
   theme(text = element_text(family = "Herculanum", size = 12),
         legend.position = 'bottom',
         legend.box="vertical", legend.margin=margin(),
