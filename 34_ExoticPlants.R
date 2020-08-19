@@ -39,10 +39,11 @@ p1 <- ggplot() +
   facet_wrap(~red_list_category, ncol = 2) +
   theme_void(base_family = 'Lato') +
   scale_fill_stepsn('Number of \nspecies \n(log-scale)',colours = dangerpal) +
-  theme(panel.background = element_rect(fill = bgcolor,colour = bgcolor),
+  theme(#panel.border = element_rect(fill = bgcolor,colour = bgcolor),
+    panel.background = element_rect(fill = bgcolor,colour = bgcolor),
         plot.background = element_rect(fill = bgcolor,colour = bgcolor),
         panel.grid = element_blank(),
-        legend.position = 'right')
+        legend.position = 'right') 
 p1
 
 
@@ -60,6 +61,7 @@ p2 <- d2 %>%
   theme(text = element_text(family = 'Lato'),
         panel.background = element_rect(fill = bgcolor,colour = bgcolor),
         plot.background = element_rect(fill = bgcolor,colour = bgcolor),
+        #panel.border = element_rect(fill = bgcolor,colour = bgcolor),
         legend.background = element_rect(fill = bgcolor, colour = bgcolor),
         legend.key = element_rect(fill = bgcolor, color = NA),
         panel.grid = element_blank(),
@@ -85,4 +87,19 @@ png('Plants.png',width = 12,height = 9,units = 'in',res = 200)
 all
 dev.off()
 
-#ggsave(all,filename = 'Plantsgg.png',width = 14,height = 10,units = 'in')
+
+
+# cowplot option (avoid weird projection issues from axis align wi --------
+library(cowplot)
+p1 <- p1 + 
+  coord_map(xlim=c(-180,180)) + # fix projection (thanks Dan)
+  theme(plot.margin = unit(c(0,0,0,6), "lines")) + # add whitespace to the left to sort of align
+  labs(title = 'Plants in danger',
+       subtitle = 'Threats to plants that are extinct or extinct in the wild')
+p2 <- p2 + 
+  labs(caption = 'Data: Florent Laverne & Cédric Scherer')
+
+png('Plants_cowplot.png',width = 12,height = 9,units = 'in',res = 200)
+plot_grid(p1,p2,ncol = 1) + 
+  theme(plot.background = element_rect(fill = bgcolor,colour = bgcolor))
+dev.off()                                                                                                         
