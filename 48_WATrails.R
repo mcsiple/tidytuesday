@@ -1,12 +1,12 @@
 #48_trails
-# to make the colour palette, I cloned David L Miller's gist with the usfws palettes. Thank you Dave!
-
+# By Megsie Siple
 library(tidyverse)
 library(patchwork)
 library(ggraph)
 
 # Palettes ----------------------------------------------------------------
-# From gist URL: https://gist.github.com/dill/1729bbc9ad4f915942045f96a6cfbf9d
+# to make the colour palette, I cloned David L Miller's gist with the usfws palettes. Thank you Dave!
+# Gist URL: https://gist.github.com/dill/1729bbc9ad4f915942045f96a6cfbf9d
 source(here::here("USFWS-DLL","usfws_palette.R"))
 source(here::here("HelperFunctions.R"))
 p <- usfws_palette(n = 5,name = "dolly")
@@ -15,10 +15,12 @@ trailpal <- lengthen_pal(x = 1:12, p)
 Emrld <- c("#d3f2a3", "#97e196", "#6cc08b", "#4c9b82", "#217a79", "#105965", "#074050") #from Carto colors
 FeatureColors <- c("#d39c83","#e597b9","#e4f1e1","#6cc08b",Emrld[4],"#d1afe8","#85c4c9")
   #fall, flowers, mtns, nodogs, oldgrowth, ridges, water
-#d1eeea,#a8dbd9,#85c4c9,#68abb8,#4f90a6,#3b738f,#2a5674
+
 hiketheme <- hrbrthemes::theme_ft_rc() +
-  theme(text = element_text(colour = 'white'),title = element_text(colour = 'white'),axis.text = element_text(colour = 'white'),strip.text = element_text(colour = 'white'),
-        
+  theme(text = element_text(colour = 'white'),
+        title = element_text(colour = 'white'),
+        axis.text = element_text(colour = 'white'),
+        strip.text = element_text(colour = 'white'),
         plot.background = element_rect(fill = Emrld[7]),
         panel.border = element_blank(), 
         panel.background = element_blank(), 
