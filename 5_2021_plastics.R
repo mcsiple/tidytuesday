@@ -1,12 +1,19 @@
 library(tidyverse)
 
 
+# Soundtrack --------------------------------------------------------------
+# Cardi B - UP!
+
+
+# Get the data ------------------------------------------------------------
 tuesdata <- tidytuesdayR::tt_load(2021, week = 5)
 plastics <- tuesdata$plastics
+
+
+# Summarize ---------------------------------------------------------------
 totplastics <- plastics %>%
   group_by(parent_company, year) %>%
   summarize_at(vars(empty:pvc), .funs = ~ sum(.x, na.rm = TRUE))
-
 
 top7 <- totplastics %>%
   filter(year == 2020) %>%
@@ -23,7 +30,7 @@ top7 <- totplastics %>%
   right_join(totplastics) %>%
   mutate(total = hdpe + ldpe + o + pet + pp + ps + pvc) # forgot how to sum across columns
 
-
+# Top 6 companies palettes, from design-seeds.com
 companypal <- c("#81C4CA",
                 "#468D96",
                 "#103128",
@@ -31,6 +38,7 @@ companypal <- c("#81C4CA",
                 "#FA6E90",
                 "#FCB16D")
 
+# Plot 1: coord_polar with proportion of plastic types from each company in each plastic category--------------------
 p1 <- top7 %>%
   pivot_longer(cols = empty:pvc, names_to = "type") %>%
   mutate(type = fct_reorder(type, desc(value))) %>%
@@ -101,17 +109,21 @@ p2 <- top30 %>%
   hrbrthemes::theme_ipsum_rc() +
   theme(
     legend.position = "none",
-    plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust = 0.5)
+    plot.title = element_text(hjust = 0.01),
+    plot.subtitle = element_text(hjust = 0.2)
   ) +
   labs(
     title = "Which type of plastic waste do these top companies produce?",
-    subtitle = "Based on labeled products from an audit report by Break Free From Plastic"
+    subtitle = "Proportions of each plastic type by company. Based on labeled products from an audit report by Break Free From Plastic"
   )
 
 p2
 
+
+
+# Save --------------------------------------------------------------------
 library(patchwork)
+
 png("5_2021_plastics.png", width = 14, height = 10, units = "in", res = 200)
 p2 + p1 + plot_layout(ncol = 2, widths = c(2, 3))
 dev.off()
