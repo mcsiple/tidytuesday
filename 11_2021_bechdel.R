@@ -10,7 +10,8 @@ library(tidyverse)
 
 # Do French movies pass the Bechdel test less often than others? ----------
 d1 <- movies %>%
-  mutate(isfrench = str_detect(string = country, pattern = "France")) %>%
+  mutate(isfrench = str_detect(string = country, 
+                               pattern = "France")) %>%
   group_by(year, clean_test, isfrench) %>%
   count() %>%
   filter(!is.na(isfrench)) %>%
@@ -45,7 +46,9 @@ props <- d1 %>%
 fpal <- c("#e63946", "#EA7F83", "#EEC5C0", "#a8dadc", "#457b9d")
 
 p1 <- props %>%
-  mutate(is_french = ifelse(isfrench, "French Films", "Everyone Else")) %>%
+  mutate(is_french = ifelse(isfrench, 
+                            "French Films", 
+                            "Everyone Else")) %>%
   ggplot(aes(
     x = year, y = prop_ctotal,
     colour = clean_test, fill = clean_test
@@ -55,24 +58,27 @@ p1 <- props %>%
   scale_fill_manual(values = fpal) +
   scale_colour_manual(values = fpal) +
   ylab("Proportion of movies") +
-  hrbrthemes::theme_ipsum_rc() +
-  theme(legend.position = "none") +
   labs(
     title = "Qui a réussi le Bechdel?",
     subtitle = "How many French films pass the Bechdel test?"
-  )
+  ) +
+  hrbrthemes::theme_ipsum_rc() +
+  theme(legend.position = "none") 
 
 
 p2 <- d1 %>%
-  mutate(is_french = ifelse(isfrench, "French Films", "Everyone Else")) %>%
+  mutate(is_french = ifelse(isfrench, "French Films", 
+                            "Everyone Else")) %>%
   ggplot(aes(x = year, y = n, color = clean_test)) +
   facet_wrap(~is_french, scales = "free_y") +
   geom_point() +
   geom_smooth(se = FALSE) +
-  hrbrthemes::theme_ipsum_rc() +
+  
   scale_colour_manual("Bechdel result", values = fpal) +
   scale_fill_manual(values = fpal) +
   ylab("Number of movies") +
+  labs(caption = "Plot: Margaret Siple (@margaretsiple) - Data: Bechdeltest.com API") +
+  hrbrthemes::theme_ipsum_rc() +
   theme(
     strip.background = element_blank(),
     strip.text.x = element_blank()
