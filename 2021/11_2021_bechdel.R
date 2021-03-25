@@ -117,7 +117,8 @@ d3 <- ct %>%
   pivot_wider(names_from = binary, values_from = n) %>%
   mutate_at(c("FAIL", "PASS"), ~ replace_na(., replace = 0)) %>%
   mutate(total = FAIL + PASS) %>%
-  filter(!is.na(genre) & genre != "Fi" & !rated %in% c("N/A", "Not Rated", "Unrated", "X", "TV-14", "TV-PG"))
+  filter(!is.na(genre) & genre != "Fi" & !rated %in% c("N/A", "Not Rated", "Unrated", "X", "TV-14", "TV-PG")) %>%
+  mutate(genre = recode(genre, "Sci" = "Sci-Fi"))
 
 totalrow <- d3 %>%
   select(-rated) %>%
