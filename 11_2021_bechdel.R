@@ -10,11 +10,11 @@ library(tidyverse)
 
 # Do French movies pass the Bechdel test less often than others? ----------
 d1 <- movies %>%
-  mutate(isfrench = str_detect(string = country, 
-                               pattern = "France")) %>%
-  group_by(year, clean_test, isfrench) %>%
+  mutate(isamerican = str_detect(string = country, 
+                               pattern = "USA")) %>%
+  group_by(year, clean_test, isamerican) %>%
   count() %>%
-  filter(!is.na(isfrench)) %>%
+  filter(!is.na(isamerican)) %>%
   ungroup() %>%
   mutate(clean_test = recode(clean_test,
     "dubious" = "Probably doesn't pass",
@@ -35,45 +35,44 @@ d1 <- movies %>%
 
 counts <- d1 %>%
   ungroup() %>%
-  group_by(year, isfrench) %>%
+  group_by(year, isamerican) %>%
   summarize(totalmovies = sum(n)) %>%
   ungroup()
 
 props <- d1 %>%
-  left_join(counts, by = c("year", "isfrench")) %>%
+  left_join(counts, by = c("year", "isamerican")) %>%
   mutate(prop_ctotal = n / totalmovies)
 
 fpal <- c("#e63946", "#EA7F83", "#EEC5C0", "#a8dadc", "#457b9d")
 
 p1 <- props %>%
-  mutate(is_french = ifelse(isfrench, 
-                            "French Films", 
+  mutate(is_american = ifelse(isamerican, 
+                            "American Films", 
                             "Everyone Else")) %>%
   ggplot(aes(
     x = year, y = prop_ctotal,
     colour = clean_test, fill = clean_test
   )) +
   geom_col() +
-  facet_wrap(~is_french) +
+  facet_wrap(~is_american) +
   scale_fill_manual(values = fpal) +
   scale_colour_manual(values = fpal) +
   ylab("Proportion of movies") +
   labs(
-    title = "Qui a réussi le Bechdel?",
-    subtitle = "How many French films pass the Bechdel test?"
+    title = "The Bechdel test in American films and globally",
+    subtitle = "How do American films compare to films from other countries?"
   ) +
   hrbrthemes::theme_ipsum_rc() +
   theme(legend.position = "none") 
 
 
 p2 <- d1 %>%
-  mutate(is_french = ifelse(isfrench, "French Films", 
+  mutate(is_american = ifelse(isamerican, "American Films", 
                             "Everyone Else")) %>%
   ggplot(aes(x = year, y = n, color = clean_test)) +
-  facet_wrap(~is_french, scales = "free_y") +
+  facet_wrap(~is_american, scales = "free_y") +
   geom_point() +
   geom_smooth(se = FALSE) +
-  
   scale_colour_manual("Bechdel result", values = fpal) +
   scale_fill_manual(values = fpal) +
   ylab("Number of movies") +
@@ -157,12 +156,14 @@ p3 <- d4 %>%
   ylab("Genre") +
   xlab("Rating") +
   labs(
-    title = "Which genres pass the Bechdel test?",
-    subtitle = "Fewer R-rated movies pass the Bechdel test across every genre",
+    title = "Across genres, fewer R-rated films pass the Bechdel",
+    subtitle = "Blue crescents indicate where more than two-thirds of films pass the test.",
     caption = "Plot: Margaret Siple (@margaretsiple) - Data: Bechdeltest.com API"
   ) +
-  hrbrthemes::theme_ipsum_rc()
+  hrbrthemes::theme_ipsum_rc() +
+  theme(plot.title = element_text(hjust = 0.5), 
+        plot.subtitle = element_text(colour = highlightmoon, hjust = 0.5))
 
-png("BechdelMoons.png", width = 6, height = 10, units = "in", res = 200)
+png("BechdelMoons.png", width = 7, height = 10, units = "in", res = 200)
 p3
 dev.off()
