@@ -8,7 +8,7 @@ movies <- tuesdata$movies
 library(tidyverse)
 
 
-# Do French movies pass the Bechdel test less often than others? ----------
+# Do American movies pass the Bechdel test less often than others? ----------
 d1 <- movies %>%
   mutate(isamerican = str_detect(string = country, 
                                pattern = "USA")) %>%
