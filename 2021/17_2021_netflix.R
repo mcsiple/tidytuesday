@@ -106,11 +106,13 @@ make_year_plot <- function(x, pal = rodrigopal) {
 }
 
 
-# Make this into a nodes tibble
 library(patchwork)
+
+# amazing shortcut for many mini figs
 list <- alldat %>%
   split(.$add_year) %>%
   map(make_year_plot)
+
 p1 <- wrap_plots(list, ncol = 3, nrow = 3) +
   plot_annotation(caption = "Data: Sara Stoudt / The Economist. Plot: @margaretsiple w/ code from @jakekaupp") & (hrbrthemes::theme_ipsum(base_size = 10) + theme(
   legend.position = "none",
@@ -158,6 +160,9 @@ p2 <- d2 %>%
   ) +
   hrbrthemes::theme_ipsum(base_size = 10) +
   theme(legend.position = "bottom")
+
+
+# Export figs -------------------------------------------------------------
 
 png("NetflixA.png", width = 6, height = 10, units = "in", res = 200)
 p2
