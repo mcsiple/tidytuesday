@@ -114,28 +114,34 @@ p1 <- lyrics_wide2 %>%
     x = "Track number",
     title = "Spice Girls and Sentiments",
     subtitle = "Sentiment analysis of Spice Girls lyrics and correlations between different tracks"
-  ) 
+  )
 p1
 
 
 # Studio album tracks ----------------------------------------------------
 
 dat2 <- studio_album_tracks %>%
-  select(danceability, energy, loudness, liveness, valence
-         ,album_name
-         ) 
+  select(
+    danceability, energy, loudness, liveness, valence,
+    album_name
+  )
 
 p2 <- GGally::ggpairs(as.data.frame(dat2),
-        columns = 1:5, aes(color = album_name,alpha = 0.8)) + 
-  scale_color_manual(values = spice_pal[c(1,8,9)]) + 
-  scale_fill_manual(values = spice_pal[c(1,8,9)]) +
+  columns = 1:5, aes(color = album_name, alpha = 0.8)
+) +
+  scale_color_manual(values = spice_pal[c(1, 8, 9)]) +
+  scale_fill_manual(values = spice_pal[c(1, 8, 9)]) +
   hrbrthemes::theme_ipsum_rc() +
   labs(caption = "Spice Girls dataset from @jacquietran")
 
-png("SG1.png",width = 8,height = 6,units = 'in',res = 150)
+
+# Save plots --------------------------------------------------------------
+
+  
+png("SG1.png", width = 8, height = 6, units = "in", res = 150)
 p1
 dev.off()
 
-png("SG2.png",width = 10,height = 8,units = 'in',res = 150)
+png("SG2.png", width = 10, height = 8, units = "in", res = 150)
 p2
 dev.off()
