@@ -8,6 +8,7 @@ library(glue)
 library(stringr)
 library(ggchicklet)
 library(GGally)
+library(ggcorrplot)
 
 # Color palettes and themes -----------------------------------------------
 # Palettes from Spice Girls album covers, made on coolors.co
@@ -113,7 +114,7 @@ p1 <- lyrics_wide2 %>%
   labs(
     x = "Track number",
     title = "Spice Girls and Sentiments",
-    subtitle = "Sentiment analysis of Spice Girls lyrics and correlations between different tracks"
+    subtitle = "Sentiment analysis of Spice Girls lyrics and correlations between track characteristics"
   )
 p1
 
@@ -131,17 +132,24 @@ p2 <- GGally::ggpairs(as.data.frame(dat2),
 ) +
   scale_color_manual(values = spice_pal[c(1, 8, 9)]) +
   scale_fill_manual(values = spice_pal[c(1, 8, 9)]) +
-  hrbrthemes::theme_ipsum_rc() +
-  labs(caption = "Spice Girls dataset from @jacquietran")
+  hrbrthemes::theme_ipsum_rc()
 
+x <- studio_album_tracks %>%
+  select(speechiness:tempo)
+
+xx <- cor_pmat(x)
+
+p3 <- ggcorrplot(xx,
+  type = "upper",
+  method = "circle",
+  ggtheme = hrbrthemes::theme_ipsum_rc,
+  colors = c("#6D9EC1", "white", "#07047C")
+) +
+  labs(caption = "Spice Girls dataset from @jacquietran")
 
 # Save plots --------------------------------------------------------------
 
-  
-png("SG1.png", width = 8, height = 6, units = "in", res = 150)
-p1
-dev.off()
 
-png("SG2.png", width = 10, height = 8, units = "in", res = 150)
-p2
+png("SG.png", width = 12, height = 7, units = "in", res = 150)
+p1 + p3 + plot_layout(ncol = 2, widths = c(2, 1))
 dev.off()
