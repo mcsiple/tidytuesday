@@ -1,6 +1,12 @@
 .Rproj.user
 .Rhistory
-.RData
+*.RData
+*.rds
+*.png
+*.zip
+Other/
 .Ruserdata
 Dairy.png
 ^incomplete/$
+
+2021/RaincloudPlots-master/
