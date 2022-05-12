@@ -65,9 +65,11 @@ p1 <- baseplot +
                            aes(x=total_weeks, y=average_rating, 
                                label = title), size = 3,
                            nudge_y = .1
-  )
+  ) +
+  guides(color = guide_legend(override.aes = aes(label = ""),title = "Language"))
   
 p1
+
 bestselling_authors <- nyt_titles %>% 
   group_by(author) %>% 
   count() %>%
@@ -102,17 +104,18 @@ p2 <- bsauthors_ts %>%
   xlab("Year") +
   ylab("Unique NYT bestselling books") +
   facet_wrap(~author,ncol = 2) +
-  hrbrthemes::theme_ft_rc(base_size = 8) +
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        axis.title.x = element_text(size = 14),
-        axis.title.y = element_text(size = 14),
-        legend.position = 'bottom') +
   guides(size=guide_legend(title="Average Goodreads rating"))
 p2
 
 library(patchwork)
-p1+p2
 
-ggplot(dat, aes(x=num_pages,y=text_reviews_count)) + 
-  geom_point()
+booktheme <- hrbrthemes::theme_ft_rc(base_size = 8) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14),
+        legend.position = 'bottom',
+        strip.text.x = element_text(size = 10))
+
+p1 + p2 + plot_annotation(title = "How does Goodreads treat the NYT bestsellers?",caption = "Data: goodreadsbooks from Kaggle and Post45 Data") & booktheme
+
