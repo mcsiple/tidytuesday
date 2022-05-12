@@ -117,5 +117,8 @@ booktheme <- hrbrthemes::theme_ft_rc(base_size = 8) +
         legend.position = 'bottom',
         strip.text.x = element_text(size = 10))
 
-p1 + p2 + plot_annotation(title = "How does Goodreads treat the NYT bestsellers?",caption = "Data: goodreadsbooks from Kaggle and Post45 Data") & booktheme
-
+png(filename = "19_NYTBestsellers.png",width = 12,height = 8,units = 'in',res = 200)
+p1 + p2 + plot_annotation(title = "How does Goodreads treat the NYT bestsellers?",
+                          subtitle = "I've always been curious about how representative the Goodreads community is of broader readership.",
+                          caption = "Data: goodreadsbooks from Kaggle and Post45 Data") & booktheme
+dev.off()
