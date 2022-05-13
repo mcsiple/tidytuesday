@@ -122,3 +122,27 @@ p1 + p2 + plot_annotation(title = "How does Goodreads treat the NYT bestsellers?
                           subtitle = "I've always been curious about how representative the Goodreads community is of broader readership.",
                           caption = "Data: goodreadsbooks from Kaggle and Post45 Data") & booktheme
 dev.off()
+
+
+# Bonus investigation: more correlations! ---------------------------------
+
+baseplot2 <- dat_matches %>%
+  ggplot(aes(x=total_weeks,y=ratings_count)) + geom_point()
+
+manyreviews <- filter(dat_matches,ratings_count>700000) %>% mutate(title = stringr::str_to_title(title))
+
+p3 <- baseplot2 + 
+  geom_point(data=manyreviews, 
+                      aes(x=total_weeks, y=ratings_count)) +
+  ggrepel::geom_text_repel(data=manyreviews, 
+                           aes(x=total_weeks,y=ratings_count, 
+                               label = title), size = 3
+  ) +
+  xlab("Weeks on NYT bestsellers list") +
+  ylab("Number of ratings on Goodreads")
+  
+png(filename = "NumReviewsVsWeeks.png",width = 6,height = 5,units = 'in',res=200)
+p3
+dev.off()
+
+gr2 %>% ggplot(aes(x=as.numeric(ratings_count),y=as.numeric(average_rating))) +geom_point()
