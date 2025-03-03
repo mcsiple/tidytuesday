@@ -4,7 +4,7 @@
 # theme_ipsum_rc() +
 #   theme(axis.title.x = element_text(size = rel(1.5)),
 #         axis.title.y = element_text(size = rel(1.5)))
-
+# This is a test to see if GH is working
 
 # for increasing the number of colors in a palette:
 lengthen_pal <- function(x=1:10,shortpal){
